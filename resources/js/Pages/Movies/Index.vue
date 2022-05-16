@@ -4,23 +4,19 @@
     <h1 class="mb-8 text-3xl font-bold">Movies</h1>
     <div class="flex items-center justify-between mb-6">
       <search-filter v-model="form.search" class="mr-4 w-full max-w-md" @reset="reset">
-        <label class="block text-gray-700">Role:</label>
-        <select v-model="form.role" class="form-select mt-1 w-full">
+        <label class="block text-gray-700">Genre:</label>
+        <select v-model="form.genre" class="form-select mt-1 w-full">
           <option :value="null" />
-          <option value="user">User</option>
-          <option value="owner">Owner</option>
+          <option>Action</option>
+          <option>Crime</option>
         </select>
-        <label class="block mt-4 text-gray-700">Trashed:</label>
+        <label class="block mt-4 text-gray-700">Language:</label>
         <select v-model="form.trashed" class="form-select mt-1 w-full">
           <option :value="null" />
-          <option value="with">With Trashed</option>
-          <option value="only">Only Trashed</option>
+          <option>English</option>
+          <option>Spanish</option>
         </select>
       </search-filter>
-      <Link class="btn-indigo" href="/movies/create">
-      <span>Create</span>
-      <span class="hidden md:inline">&nbsp;User</span>
-      </Link>
     </div>
     <div class="bg-white rounded-md shadow overflow-x-auto">
       <table class="w-full whitespace-nowrap">

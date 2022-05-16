@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
+use App\Models\Language;
 use App\Models\Movie;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -19,66 +21,40 @@ class MoviesController extends Controller
         // Get movie from OMDb API "By Title" with t param (returns only one full result)
         // "By Search" returns many movies per search string, but without genre & language
         $title = Request::get('search');
+        // I was going to make this >3 chars, but I found some interesting sinlge char movies
         $response = Http::get('http://www.omdbapi.com/?apikey=b07b195f&type=movie&t=' . $title);
-        $this->store($response->json());
+        // *** This whole section & store() method could/should be moved to its own service provider
+        $this->store($response->json()); // saves the single "By Title" result
 
         // Render the view
         return Inertia::render('Movies/Index', [
             'filters' => Request::all('search', 'role', 'trashed'),
             'movies' => Auth::user()->account->movies()
+                ->with('genres')
+                ->with('languages')
                 ->orderByTitle()
                 ->filter(Request::only('search'))
                 ->get()
-                ->transform(fn ($movie) => [
-                    'id' => $movie->id,
-                    'Poster' => $movie->Poster,
-                    'Title' => $movie->Title,
-                    'Genre' => $movie->Genre,
-                    'Language' => $movie->Language,
-                    'deleted_at' => $movie->deleted_at,
-                ]),
+                ->transform(
+                    function ($movie) {
+                        return $movie->getMovieData($movie);
+                    }
+                ),
         ]);
     }
 
+    // Saves the single "By Title" result
     public function store($json)
     {
         if ($json['Response'] == 'True') {
-            Auth::user()->account->movies()->updateOrCreate([
-                'Title' => $json['Title'],
-                'Year' => $json['Year'],
-                'Rated' => $json['Rated'],
-                'Released' => $json['Released'],
-                'Runtime' => $json['Runtime'],
-                'Genre' => $json['Genre'],
-                'Director' => $json['Director'],
-                'Writer' => $json['Writer'],
-                'Actors' => $json['Actors'],
-                'Plot' => $json['Plot'],
-                'Language' => $json['Language'],
-                'Country' => $json['Country'],
-                'Awards' => $json['Awards'],
-                'Poster' => $json['Poster'],
-                'Ratings' => serialize($json['Ratings']),
-                'Metascore' => $json['Metascore'],
-                'imdbRating' => $json['imdbRating'],
-                'imdbVotes' => $json['imdbVotes'],
-                'imdbID' => $json['imdbID'],
-                'Type' => $json['Type'],
-                'DVD' => $json['DVD'] ?? 'N/A',
-                'BoxOffice' => $json['BoxOffice'] ?? 'N/A',
-                'Production' => $json['Production'] ?? 'N/A',
-                'Website' => $json['Website'] ?? 'N/A',
-                'Response' => $json['Response'],
-                'json_response' => serialize($json)
-            ]);
+            Movie::saveMovieDataFromOMDb($json);
         }
-
         return Redirect::route('movies'); // ->with('success', 'New movie added to local storage.');
     }
 
     public function detail(Movie $movie)
     {
-        dd($movie);
+        dd($movie->toArray());
     }
 
     public function destroy(Movie $movie)

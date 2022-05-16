@@ -21,12 +21,12 @@ class CreateMoviesTable extends Migration
             $table->string('Rated');
             $table->string('Released');
             $table->string('Runtime');
-            $table->string('Genre');
+            // $table->string('Genre');
             $table->string('Director');
             $table->string('Writer');
             $table->string('Actors');
             $table->text('Plot');
-            $table->string('Language');
+            // $table->string('Language');
             $table->string('Country');
             $table->string('Awards');
             $table->string('Poster');
