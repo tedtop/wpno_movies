@@ -28,12 +28,12 @@ class MoviesController extends Controller
 
         // Render the view
         return Inertia::render('Movies/Index', [
-            'filters' => Request::all('search', 'role', 'trashed'),
+            'filters' => Request::all('search', 'genre', 'language'),
             'movies' => Auth::user()->account->movies()
                 ->with('genres')
                 ->with('languages')
                 ->orderByTitle()
-                ->filter(Request::only('search'))
+                ->filter(Request::only('search', 'genre', 'language'))
                 ->get()
                 ->transform(
                     function ($movie) {

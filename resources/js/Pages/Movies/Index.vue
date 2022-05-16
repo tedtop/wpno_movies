@@ -8,10 +8,11 @@
         <select v-model="form.genre" class="form-select mt-1 w-full">
           <option :value="null" />
           <option>Action</option>
+          <option>Biography</option>
           <option>Crime</option>
         </select>
         <label class="block mt-4 text-gray-700">Language:</label>
-        <select v-model="form.trashed" class="form-select mt-1 w-full">
+        <select v-model="form.language" class="form-select mt-1 w-full">
           <option :value="null" />
           <option>English</option>
           <option>Spanish</option>
@@ -87,8 +88,8 @@ export default {
     return {
       form: {
         search: this.filters.search,
-        role: this.filters.role,
-        trashed: this.filters.trashed,
+        genre: this.filters.genre,
+        language: this.filters.language,
       },
     }
   },

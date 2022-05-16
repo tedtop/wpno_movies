@@ -117,12 +117,14 @@ class Movie extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where('Title', 'like', '%' . $search . '%');
-        })->when($filters['trashed'] ?? null, function ($query, $trashed) {
-            if ($trashed === 'with') {
-                $query->withTrashed();
-            } elseif ($trashed === 'only') {
-                $query->onlyTrashed();
-            }
+        })->when($filters['genre'] ?? null, function ($query, $genre) {
+            $query->whereHas('genres', function ($query) use ($genre) {
+                $query->where('genre', $genre);
+            });
+        })->when($filters['language'] ?? null, function ($query, $language) {
+            $query->whereHas('languages', function ($query) use ($language) {
+                $query->where('language', $language);
+            });
         });
     }
 }
