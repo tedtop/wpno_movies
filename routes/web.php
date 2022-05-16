@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\MoviesController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
@@ -38,6 +39,26 @@ Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::get('/', [DashboardController::class, 'index'])
     ->name('dashboard')
     ->middleware('auth');
+
+
+// Movies
+
+Route::get('movies', [MoviesController::class, 'index'])
+    ->name('movies')
+    ->middleware('auth');
+
+Route::get('movies/{movie}/detail', [MoviesController::class, 'detail'])
+    ->name('movies.detail')
+    ->middleware('auth');
+
+Route::delete('movies/{movie}', [MoviesController::class, 'destroy'])
+    ->name('movies.destroy')
+    ->middleware('auth');
+
+Route::put('movies/{movie}/restore', [MoviesController::class, 'restore'])
+    ->name('movies.restore')
+    ->middleware('auth');
+
 
 // Users
 

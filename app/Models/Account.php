@@ -20,4 +20,9 @@ class Account extends Model
     {
         return $this->hasMany(Contact::class);
     }
+
+    public function movies()
+    {
+        return $this->hasMany(Movie::class);
+    }
 }
