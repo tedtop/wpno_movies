@@ -108,11 +108,17 @@ class Movie extends Model
         return $this->belongsToMany(Language::class, 'languages_movies');
     }
 
+    /**
+     * Ordeer by movie title
+     */
     public function scopeOrderByTitle($query)
     {
         $query->orderBy('Title');
     }
 
+    /**
+     * The thing that does the actual filtering on the db query
+     */
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {

@@ -6,6 +6,7 @@
       <search-filter v-model="form.search" class="mr-4 w-full max-w-md" @reset="reset">
         <label class="block text-gray-700">Genre:</label>
         <select v-model="form.genre" class="form-select mt-1 w-full">
+          <option :value="null" />
           <option v-for="g in genres" :key="g.id">{{ g.genre }}</option>
         </select>
         <label class="block mt-4 text-gray-700">Language:</label>

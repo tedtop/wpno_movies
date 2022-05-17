@@ -10,21 +10,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class MoviesController extends Controller
 {
     public function index()
     {
+        // @TODO: This whole section & store() method could/should be moved to its own service provider
         // Get movie from OMDb API "By Title" with t param (returns only one full result)
         // "By Search" returns many movies per search string, but without genre & language
         $title = Request::get('search');
-        // I was going to make this >3 chars, but I found some interesting sinlge char movies
-        $response = Http::get('http://www.omdbapi.com/?apikey=b07b195f&type=movie&t=' . $title);
-        // *** This whole section & store() method could/should be moved to its own service provider
-        $this->store($response->json()); // saves the single "By Title" result
+        // Let's only look for titles over 3 chars; though there are many single char movie names
+        if (strlen($title) >= 3) {
+            $response = Http::get('http://www.omdbapi.com/?apikey=' . env('OMDB_API_KEY') . '&type=movie&t=' . $title);
+            $this->store($response->json()); // saves the single "By Title" result
+        }
 
         // Render the view
         return Inertia::render('Movies/Index', [
@@ -54,11 +54,17 @@ class MoviesController extends Controller
         return Redirect::route('movies'); // ->with('success', 'New movie added to local storage.');
     }
 
+    /**
+     * @TODO: Build a movie detail view with option to delete/restore
+     */
     public function detail(Movie $movie)
     {
         dd($movie->toArray());
     }
 
+    /**
+     * @TODO: For future use when building movie detail view
+     */
     public function destroy(Movie $movie)
     {
         $movie->delete();
@@ -66,6 +72,9 @@ class MoviesController extends Controller
         return Redirect::back()->with('success', 'Movie deleted.');
     }
 
+    /**
+     * @TODO: For future use when building movie detail view
+     */
     public function restore(Movie $movie)
     {
         $movie->restore();
