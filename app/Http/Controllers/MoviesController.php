@@ -40,6 +40,8 @@ class MoviesController extends Controller
                         return $movie->getMovieData($movie);
                     }
                 ),
+            'genres' => Genre::all(),
+            'languages' => Language::all()
         ]);
     }
 

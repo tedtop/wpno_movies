@@ -6,16 +6,12 @@
       <search-filter v-model="form.search" class="mr-4 w-full max-w-md" @reset="reset">
         <label class="block text-gray-700">Genre:</label>
         <select v-model="form.genre" class="form-select mt-1 w-full">
-          <option :value="null" />
-          <option>Action</option>
-          <option>Biography</option>
-          <option>Crime</option>
+          <option v-for="g in genres" :key="g.id">{{ g.genre }}</option>
         </select>
         <label class="block mt-4 text-gray-700">Language:</label>
         <select v-model="form.language" class="form-select mt-1 w-full">
           <option :value="null" />
-          <option>English</option>
-          <option>Spanish</option>
+          <option v-for="l in languages" :key="l.id">{{ l.language }}</option>
         </select>
       </search-filter>
     </div>
@@ -83,6 +79,8 @@ export default {
   props: {
     filters: Object,
     movies: Array,
+    genres: Array,
+    languages: Array,
   },
   data() {
     return {
