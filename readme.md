@@ -3,7 +3,7 @@
 Clone the repo locally:
 
 ```sh
-git clone https://github.com/inertiajs/wpno_movies.git wpno_movies
+git clone https://github.com/tedtop/wpno_movies.git wpno_movies
 cd wpno_movies
 ```
 
